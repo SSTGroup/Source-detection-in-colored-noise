@@ -9,7 +9,8 @@ The technique in available in MATLAB code in the function sd_colorednoise.m
 
 ------------------------------------------------------------------------------------
 
-Contact
+# Contact
+
 In case of questions, suggestions, problems etc. please send an email to
 
 Alma Eguizabal: alma.eguizabal@sst.upb.de
