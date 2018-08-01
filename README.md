@@ -14,7 +14,8 @@ In case of questions, suggestions, problems etc. please send an email to
 
 Alma Eguizabal: alma.eguizabal@sst.upb.de
 
-References
+References:
+
 [1] A. Eguizabal, C. Lameiro, P. J. Schreier, and T. Hasija, “Model-order selection in
 statistical shape models,” submitted to IEEE Signal Processing Letters
 
