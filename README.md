@@ -21,4 +21,4 @@ References:
 
 [2] A. Eguizabal, P. J. Schreier and D. Ramírez, “Model-order selection in statistical shape models,” 
 in Proc. of the IEEE International Workshop on Machine Learning for Signal Processing (MLSP), September 2018,
-http://here.arvix.link.
+https://arxiv.org/abs/1808.00309
