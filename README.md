@@ -5,7 +5,7 @@ Most approaches in array signal processing assume the signals to be embedded in 
 We propose a strategy that can handle colored noise in the detection of the number of sources. 
 We model the source detection as a regression problem and apply information-theoretic criteria to determine the model order of the regression. 
 
-The technique in available in MATLAB code in the function sd_colorednoise.m
+The technique is available in MATLAB code in the function sd_colorednoise.m
 
 
 
