@@ -17,7 +17,7 @@ function tf = sd_colorednoise(X, Mtrain, sizeBLK)
 %
 %   Input:
 %       X           -   zero-mean input data (dimensions x obervations)
-%       Mtrain      -   proporsion of observations used in the Train set, from 0 to 1
+%       Mtrain      -   proportion of observations used in the Train set, from 0 to 1
 %       sizeBLK     -   size of the blocks in the estimated covariance
 %                       matrix of the residuals (from 1 to size(X,2))
 %       
@@ -68,7 +68,7 @@ function tf = sd_colorednoise(X, Mtrain, sizeBLK)
 % ##   about bugs. 
 % ##
 % ##
-%% Funtion starts:
+%% Function starts:
 
 %%  1. Divide dataset in Train and Test
 Nall = (1:size(X,2))';
