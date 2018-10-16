@@ -17,8 +17,6 @@ Alma Eguizabal: alma.eguizabal@sst.upb.de
 
 # References
 
-[1] A. Eguizabal, C. Lameiro, P. J. Schreier and T. Hasija, “Detecting the number of sources impinging upon an array in the presence of colored noise,” submitted to IEEE Signal Processing Letters
-
-[2] A. Eguizabal, P. J. Schreier and D. Ramírez, “Model-order selection in statistical shape models,” 
+[1] A. Eguizabal, P. J. Schreier and D. Ramírez, “Model-order selection in statistical shape models,” 
 in Proc. of the IEEE International Workshop on Machine Learning for Signal Processing (MLSP), September 2018,
 https://arxiv.org/abs/1808.00309
