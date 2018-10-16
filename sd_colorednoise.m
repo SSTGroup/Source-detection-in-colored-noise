@@ -11,9 +11,6 @@ function tf = sd_colorednoise(X, Mtrain, sizeBLK)
 %   X(t) = As(t) + n(t) , where n is a zero-mean vector with arbitraty
 %                           covariance Sigma
 %
-%  [1] A. Eguizabal, C. Lameiro, P.J. Schreier, T. Hasija "Detecting the number 
-%   of sources impinging upon an array in the presence of colored noise" 
-%   (submitted to Signal Processing Letters)
 %
 %   Input:
 %       X           -   zero-mean input data (dimensions x obervations)
