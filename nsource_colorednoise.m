@@ -1,7 +1,7 @@
-function tf = sd_colorednoise(X, Mtrain, sizeBLK)
+function tf = nsource_colorednoise(X, Mtrain, sizeBLK)
 %% Author: 
 %  Alma Eguizabal, <alma.eguizabal@sst.upb.de>
-%  Date: 1.8.2018 
+%  Date: 18.12.2018 
 
 %% Description:
 %   This funtion detects the number of sources upon an array
@@ -11,6 +11,9 @@ function tf = sd_colorednoise(X, Mtrain, sizeBLK)
 %   X(t) = As(t) + n(t) , where n is a zero-mean vector with arbitraty
 %                           covariance Sigma
 %
+%  [1] A. Eguizabal, C. Lameiro, D. Ramírez, P.J. Schreier 
+%                       "Source enumeration in the presence of colored noise" 
+%   (submitted to Signal Processing Letters)
 %
 %   Input:
 %       X           -   zero-mean input data (dimensions x obervations)
@@ -65,6 +68,7 @@ function tf = sd_colorednoise(X, Mtrain, sizeBLK)
 % ##   about bugs. 
 % ##
 % ##
+
 %% Function starts:
 
 %%  1. Divide dataset in Train and Test
@@ -76,13 +80,15 @@ indtest = Nall(setdiff(Nall,indtrain));
 
 Xtrain = X(:,indtrain);
 Xtest = X(:,indtest);
+
 %% 2. Build regression model
 Y_data_i = Xtrain;
-% 2.1 PCA anaylisis
+% 2.1 PCA analysis
 S = (Y_data_i )*(Y_data_i)'/(size(Y_data_i,2));
 [Pall,Lambda] = eig(S);
 [lambdaall,indexes] = sort(real(diag(Lambda)),'descend');
 Pall = Pall(:,indexes);
+
 %% 3. Run model-order strategy in the Test residual samples
 M = size(Xtest,2); % number of test samples
 N = size(Xtest,1); % size of samples 
@@ -94,56 +100,67 @@ for n_modes = 1:max_modes  % For every model-order n_modes
         Ln = diag(abs(lambdaall(1:n_modes)));
         lambda_sq = sqrt(abs(diag(Ln)));
         SigmaN = eye(N); %Initial value of error noise
-        diff_trace = 1;
         altr_i = 0;
+        diff_trace = 1;
+        % Initial guess of Bt in the MM
+        Bt = Pn'*Xtest;
+        Bt =  min(abs(Bt),lambda_sq).*(Bt./abs(Bt));
+        % Start Alternating Optimization
         while diff_trace > 0.1 && altr_i < 10
-    % Constrain alpha: alpha*sqrt(lambda)
             altr_i = altr_i + 1; 
-            error_vector = zeros(M,N)*NaN;
-               for id_s = 1:M             % For every sample
-                    Y_i = Xtest(:,id_s);
-                   % Perform regression: color noise
-                    alpha = 1;
-                    n_blk = sizeBLK;
-                    d=round(size(SigmaN,1)/n_blk);
-                    krom_mult = kron(eye(d),ones(n_blk,n_blk));
-                    if size(krom_mult,1) > size(SigmaN,1)
-                        krom_mult = krom_mult(1:size(SigmaN,1),1:size(SigmaN,2));
-                    end
-                    if size(krom_mult,1) < size(SigmaN,1)
-                        d_ = size(krom_mult,1);
-                        krom_mult_n = zeros(size(SigmaN));
-                        krom_mult_n(1:d_,1:d_) = krom_mult;
-                        krom_mult_n(d_+1:end,d_+1:end) = 1;
-                        krom_mult = krom_mult_n;
-                    end
-                    SigmaN_ = (krom_mult.*SigmaN);
-                    W  = inv(SigmaN_);
-                    b_a = ((Pn'*W*Pn))\(Pn'*W)*Y_i;
-                    b_a(abs(b_a)>alpha.*lambda_sq) = sign(b_a(abs(b_a)>alpha.*lambda_sq))...
-                                            *alpha.*((lambda_sq(abs(b_a)>alpha.*lambda_sq)));  
-                   ba = b_a;
-                   error_vector(id_s,:) = (Y_i-Pn*ba);
-               end % samples
-        R = 1/M*(error_vector')*error_vector; 
-        diff_trace = norm((R-SigmaN),'fro');
-        SigmaN = R;
-        %% Avoid ill-condition problems in noise matrix
-        [U,S,~] = svd(SigmaN);
-        diagS = diag(S);
-        diagS(diagS < abs(lambdaall(end))) = abs(lambdaall(end));
-        SigmaN = U*diag(diagS)*U';
+           % Sample poor: consider diagonal blocks of estimate of covariance matrix of error SigmaN 
+            n_blk = sizeBLK;
+            d=round(size(SigmaN,1)/n_blk);
+            krom_mult = kron(eye(d),ones(n_blk,n_blk));
+            if size(krom_mult,1) > size(SigmaN,1)
+                krom_mult = krom_mult(1:size(SigmaN,1),1:size(SigmaN,2));
+            end
+            if size(krom_mult,1) < size(SigmaN,1)
+                d_ = size(krom_mult,1);
+                krom_mult_n = zeros(size(SigmaN));
+                krom_mult_n(1:d_,1:d_) = krom_mult;
+                krom_mult_n(d_+1:end,d_+1:end) = 1;
+                krom_mult = krom_mult_n;
+            end
+            SigmaN_ = (krom_mult.*SigmaN);
+            W  = inv(SigmaN_);
+            Mt = max(eig(W))*eye(length(W));
+            % Start MM estimation of Bt
+            MM_it = 0;
+            diff_b = 1;
+            max_MM_it = 100;
+            while MM_it <  max_MM_it && diff_b > 0.01 %lets try with 4 itereations first
+                MM_it = MM_it + 1;
+                V = (W-Mt)*(Xtest-Pn*Bt);
+                s = real(Mt(1,1));
+                Bu = 1/s*Pn'*(s*Xtest+V);
+                Bnew = min(abs(Bu),lambda_sq).*(Bu./abs(Bu));
+                diff_b = norm(Bnew - Bt,'fro');
+                Bt = Bnew;
+            end % MM itetations
+
+            error_vector  = Xtest - Pn*Bt;
+            R = SigmaN;
+            SigmaN = 1/M*(error_vector)*error_vector'; 
+
+        % Avoid ill-condition problems in noise matrix
+            SigmaN = (krom_mult.*SigmaN);
+            [U,S,~] = svd(SigmaN);
+            diagS = diag(S);
+            diagS(diagS < abs(lambdaall(end))) = abs(lambdaall(end));
+            SigmaN = U*diag(diagS)*U';
+            diff_trace = norm((R-SigmaN),'fro');
+      
         end % alternating optimization
     SigmaNf(n_modes,:,:) = SigmaN;
-    error_vectorF(n_modes,:,:) = error_vector;
+    error_vectorF(n_modes,:,:) = error_vector';
 end %n_modes
  COST_modes = zeros(1,max_modes)*NaN;
  for mds = 1:max_modes
-        dof = 2*M*mds;% penalty term, considering complex degrees of freedom
+        dof = 2*M*mds;% % AIC penalty term
         error_vector = squeeze(error_vectorF(mds,:,:));
         SigmaNf_mds = real(krom_mult.*squeeze(SigmaNf(mds,:,:)));
         COST_modes(mds) = M*log(det(SigmaNf_mds))  + trace( (error_vector/(SigmaNf_mds))*error_vector' ) ...
-                           + dof; % AIC
+                           + dof; 
   end
  [~,tf] = min(real(COST_modes));
-
