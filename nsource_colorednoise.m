@@ -13,7 +13,7 @@ function tf = nsource_colorednoise(X, Mtrain, sizeBLK)
 %
 %  [1] A. Eguizabal, C. Lameiro, D. Ramírez, P.J. Schreier 
 %                       "Source enumeration in the presence of colored noise" 
-%   (submitted to Signal Processing Letters)
+%   (accepted in IEEE Signal Processing Letters)
 %
 %   Input:
 %       X           -   zero-mean input data (dimensions x obervations)
