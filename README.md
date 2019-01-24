@@ -17,10 +17,10 @@ Alma Eguizabal: alma.eguizabal@sst.upb.de
 
 # References
 
-[1] A. Eguizabal, P. J. Schreier and D. Ramírez, “Model-order selection in statistical shape models,” 
-in Proc. of the IEEE International Workshop on Machine Learning for Signal Processing (MLSP), September 2018,
-https://arxiv.org/abs/1808.00309
+[1] A. Eguizabal, C. Lameiro, D. Ramírez and P. J. Schreier, “Source enumeration in the presence of colored noise” 
+to be published in IEEE Signal Processing Letters, February 2019, DOI 10.1109/LSP.2019.2895548
 
-[2] A. Eguizabal, C. Lameiro, D. Ramírez and P. J. Schreier, “Source enumeration in the presence of colored noise” 
-accepted in IEEE Signal Processing Letters, DOI 10.1109/LSP.2019.2895548
+[2] A. Eguizabal, P. J. Schreier and D. Ramírez, “Model-order selection in statistical shape models,” 
+in Proc. of the IEEE International Workshop on Machine Learning for Signal Processing (MLSP), September 2018, https://arxiv.org/abs/1808.00309
+
 
