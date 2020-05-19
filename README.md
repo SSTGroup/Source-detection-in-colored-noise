@@ -13,7 +13,7 @@ The technique is available in MATLAB code in the function nsource_colorednoise.m
 
 In case of questions, suggestions, problems etc. please send an email to
 
-Alma Eguizabal: alma.eguizabal@sst.upb.de
+Alma Eguizabal: alma.egui@gmail.com
 
 # References
 
